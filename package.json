@@ -1,0 +1,21 @@
+{
+  "name": "mqtt-pc-remote",
+  "version": "0.1.0",
+  "description": "MQTT client for shutting down PC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mqtt",
+    "pc",
+    "shutdown"
+  ],
+  "author": "Maks Chodorowski",
+  "license": "MIT",
+  "dependencies": {
+    "async-exit-hook": "^2.0.1",
+    "cross-platform-shutdown": "git+https://github.com/maxwroc/cross-platform-shutdown.git",
+    "mqtt": "^2.18.8"
+  }
+}
