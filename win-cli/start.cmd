@@ -1,0 +1,1 @@
+@powershell -File "%~dp0start-mqtt-pc-remote.ps1"

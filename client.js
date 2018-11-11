@@ -10,6 +10,7 @@ class Client {
     }
 
     start() {
+        this.log("Starting MQTT client")
         this.initMqtt()
         exitHook(callback => this.onExit(callback))
         return this
@@ -36,19 +37,19 @@ class Client {
         }
 
         this.connected = true
-        console.log("subscribed to " + this.config.topic.command)
+        this.log("Subscribed to " + this.config.topic.command)
         this.sendStatus("online")
     }
 
     onMessage(topic, message, packet) {
         if (topic != this.config.topic.command) {
             // we should get messages only from topic to which we have subscribed
-            console.error("Unsupported topic: " + topic)
+            this.log("Unsupported topic: " + topic, "error")
             return
         }
 
         if (packet.retain) {
-            console.warn(`Wrn: Retain packet received - ignoring (${topic}): ${message.toString()}`);
+            this.log(`Wrn: Retain packet received - ignoring (${topic}): ${message.toString()}`, "warn");
             return
         }
 
@@ -57,24 +58,24 @@ class Client {
             let msg = JSON.parse(message.toString())
 
             if (!msg.command) {
-                console.warn("No command in message")
+                this.log("No command in message", "warn")
                 return
             }
 
             // check if command exists on shutdown plugin
             if (shutdownCmd[msg.command]) {
                 // pass entire message as options
-                console.log("command", msg)
+                this.log("Command:" + msg.command)
                 shutdownCmd[msg.command](msg)
             }
             else {
                 // TODO try to execute command
-                console.warn("Custom commands not supported yet", msg.command)
+                this.log("Custom commands not supported yet: " + msg.command, "warn")
             }
         }
         catch (e) {
-            console.error(e)
-            console.log("Message content:", message.toString())
+            this.log(e, "error");
+            this.log("Message content:" + message.toString())
         }
     }
 
@@ -94,6 +95,12 @@ class Client {
             status,
             { retain: this.config.state_refresh_interval === 0 },
             callback)
+    }
+
+    log(msg, type = "log") {
+        if (this.config.print_output) {
+            console[type](`[${new Date().toISOString()}]`, msg);
+        }
     }
 }
 

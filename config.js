@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const config_file = "config.json"
+const config_file = __filename + "on"
 
 const config = {
     mqtt_broker: "",
@@ -9,7 +9,8 @@ const config = {
         state: "device/pc/state"
     },
     state_refresh_interval: 0,
-    allow_custom_commands: false
+    allow_custom_commands: false,
+    print_output: true
 }
 
 function readAndValidateConfig() {
