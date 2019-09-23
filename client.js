@@ -17,7 +17,9 @@ class Client {
     }
 
     initMqtt() {
-        this.mqtt = mqtt.connect(this.config.mqtt_broker)
+        let options = this.config.mqtt_user ? { "username": this.config.mqtt_user, "password": this.config.mqtt_pass } : {};
+    
+        this.mqtt = mqtt.connect(this.config.mqtt_broker, options)
         this.mqtt.on("connect", () => this.onConnect())
         this.mqtt.on("message", (topic, message, packet) => this.onMessage(topic, message, packet))
     }
